@@ -14,6 +14,13 @@ public class Person {
     private long id;
     private String name;
     private String surname;
+    @ManyToMany
+    @JoinTable(
+            name = "adress_person",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "adress_id"))
+    private Set<Adress> adresses;
+
 
     public Person() {
     }
@@ -43,15 +50,8 @@ public class Person {
     public String getSurname() {
         return surname;
     }
-
     public void setSurname(String surname) {
         this.surname = surname;
     }
-//    @ManyToMany
-//    @JoinTable(
-//            name = "adress_person",
-//            joinColumns = @JoinColumn(name = "person_id"),
-//            inverseJoinColumns = @JoinColumn(name = "adress_id"))
-//    private Set<Adress> adresses;
 
 }

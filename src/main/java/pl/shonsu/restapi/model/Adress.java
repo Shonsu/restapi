@@ -16,6 +16,9 @@ public class Adress {
     private String houseNumber;
     private Integer flatNumber;
 
+    @ManyToMany(mappedBy = "adresses")
+    private Set<Person> persons;
+
     public Adress() {
     }
 
@@ -68,8 +71,5 @@ public class Adress {
     }
 
 
-
-//    @ManyToMany(mappedBy = "adresses")
-//    private Set<Person> persons;
 
 }
