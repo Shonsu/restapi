@@ -13,7 +13,12 @@ public class PersonService {
     public PersonService(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
-    public List<Person> getPersons(){
+
+    public List<Person> getPersons() {
         return personRepository.findAll();
+    }
+
+    public Person getSinglePerson(long id) {
+        return personRepository.findById(id).orElseThrow();
     }
 }

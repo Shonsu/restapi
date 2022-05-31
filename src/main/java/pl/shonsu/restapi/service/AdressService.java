@@ -8,7 +8,6 @@ import java.util.List;
 
 @Service
 public class AdressService {
-
     private final AdressRepository adressRepository;
 
     public AdressService(AdressRepository adressRepository) {
