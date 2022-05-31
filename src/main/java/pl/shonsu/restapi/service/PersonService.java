@@ -1,7 +1,19 @@
 package pl.shonsu.restapi.service;
 
+import org.springframework.stereotype.Service;
+import pl.shonsu.restapi.model.Person;
+import pl.shonsu.restapi.repository.PersonRepository;
+
+import java.util.List;
+
+@Service
 public class PersonService {
-    public String hello(){
-        return "Hello Person Service here";
+    private final PersonRepository personRepository;
+
+    public PersonService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+    public List<Person> getPersons(){
+        return personRepository.findAll();
     }
 }

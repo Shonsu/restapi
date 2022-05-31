@@ -11,20 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Config {
 
-    private ObjectMapper objectMapper;
-    @Bean
-    public OpenAPI openAPI() {
-        return new OpenAPI();
-    }
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("restapi-public")
-                .pathsToMatch("/**")
-                .build();
-    }
-    void customizeObjectMapper(){
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    }
 
 }
