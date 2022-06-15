@@ -1,35 +1,36 @@
 package pl.shonsu.restapi.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class Person {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
-    private String surname;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthDate;
+
     @ManyToMany
     @JoinTable(
             name = "adress_person",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "adress_id"))
-    private Set<Adress> adresses;
-
-
+    private List<Adress> adresses;
     public Person() {
     }
 
-    public Person(long id, String name, String surname) {
+    public Person(Long id, String firstName, String lastName, List<Adress> adresses, LocalDate birthDate) {
         this.id = id;
-        this.name = name;
-        this.surname = surname;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.adresses = adresses;
+        this.birthDate = birthDate;
     }
+
 
     public long getId() {
         return id;
@@ -39,20 +40,37 @@ public class Person {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public void setAdresses(List<Adress> adresses) {
+        this.adresses = adresses;
+    }
+
+    public List<Adress> getAdresses() {
+        return adresses;
+    }
+
 
 }

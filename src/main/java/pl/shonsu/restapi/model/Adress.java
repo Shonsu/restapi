@@ -1,8 +1,5 @@
 package pl.shonsu.restapi.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -19,19 +16,8 @@ public class Adress {
     @ManyToMany(mappedBy = "adresses")
     private Set<Person> persons;
 
-    public Adress() {
-    }
-
     public long getId() {
         return id;
-    }
-
-    public Adress(long id, String city, String street, String houseNumber, Integer flatNumber) {
-        this.id = id;
-        this.city = city;
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.flatNumber = flatNumber;
     }
 
     public void setId(long id) {
@@ -69,7 +55,6 @@ public class Adress {
     public void setFlatNumber(Integer flatNumber) {
         this.flatNumber = flatNumber;
     }
-
 
 
 }
