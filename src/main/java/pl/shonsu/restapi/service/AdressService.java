@@ -14,11 +14,15 @@ public class AdressService {
         this.adressRepository = adressRepository;
     }
 
-    public List<Adress> getAdresses(){
+    public List<Adress> getAdresses() {
         return adressRepository.findAll();
     }
 
     public Adress getSingleAdress(long id) {
         return adressRepository.findById(id).orElseThrow();
+    }
+
+    public Adress addAdress(Adress adress) {
+        return adressRepository.save(adress);
     }
 }
