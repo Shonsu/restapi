@@ -25,7 +25,7 @@ public class FakerController {
 
     @PostMapping("/person")
     public Person addPerson(@RequestBody Person person) {
-        //Adress adress = dummyPersonService.getDummyAdress(adress.getId(), List.of(person));
+        // Adress adress = dummyPersonService.getDummyAdress(adress.getId(), List.of(person));
         person = dummyPersonService.getDummyPerson(person.getId(), List.of());
         return personService.addPerson(person);
     }
