@@ -14,7 +14,7 @@ public class Adress {
     private String houseNumber;
     private Integer flatNumber;
 
-    @ManyToMany(mappedBy = "adresses")//, cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    @ManyToMany(mappedBy = "adresses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Person> persons = new ArrayList<>();
 
     public void setPersons(List<Person> persons) {
@@ -36,6 +36,7 @@ public class Adress {
         this.flatNumber = flatNumber;
         this.persons = persons;
     }
+
     public Adress(String city, String street, String houseNumber, Integer flatNumber) {
         this.city = city;
         this.street = street;
@@ -43,12 +44,12 @@ public class Adress {
         this.flatNumber = flatNumber;
     }
 
-    public void addPerson(Person person){
+    public void addPerson(Person person) {
         this.persons.add(person);
         person.getAdresses().add(this);
     }
 
-    public void removePerson(Person person){
+    public void removePerson(Person person) {
         this.persons.remove(person);
         person.getAdresses().remove(this);
     }

@@ -16,7 +16,7 @@ public class AdressService {
     }
 
     public List<Adress> getAdresses() {
-        return adressRepository.findAllAdresses();
+        return adressRepository.findAll();
     }
 
     public Adress getSingleAdress(long id) {

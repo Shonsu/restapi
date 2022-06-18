@@ -2,7 +2,6 @@ package pl.shonsu.restapi.service;
 
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
@@ -10,9 +9,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 @Component
 public class DummyPersonService {

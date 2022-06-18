@@ -1,14 +1,13 @@
 package pl.shonsu.restapi.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.AdressService;
 import pl.shonsu.restapi.service.DummyPersonService;
 import pl.shonsu.restapi.service.PersonService;
-
-import java.util.List;
-import java.util.Set;
 
 @RequestMapping("/api/faker")
 @RestController

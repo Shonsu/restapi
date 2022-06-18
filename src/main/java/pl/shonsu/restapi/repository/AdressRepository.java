@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface AdressRepository extends JpaRepository<Adress, Long> {
     public List<Adress> findAllAdressesByPersonsIdIn(List<Long> ids);
-   @Query("select a from Adress a")
-    public List<Adress> findAllAdresses();
+   //@Query("select a from Adress a")
+   // public List<Adress> findAll();
 
 }
