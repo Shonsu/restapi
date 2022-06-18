@@ -2,6 +2,8 @@ package pl.shonsu.restapi.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,16 +16,17 @@ public class Person {
     private String lastName;
     private LocalDate birthDate;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "adress_person",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "adress_id"))
-    private List<Adress> adresses;
+    private List<Adress> adresses = new ArrayList<>();
+
     public Person() {
     }
 
-    public Person(Long id, String firstName, String lastName, List<Adress> adresses, LocalDate birthDate) {
+    public Person(Long id, String firstName, String lastName, LocalDate birthDate, List<Adress> adresses) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -31,7 +34,21 @@ public class Person {
         this.birthDate = birthDate;
     }
 
+    public Person(String firstName, String lastName, LocalDate birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
 
+    public void addAdress(Adress adress) {
+        this.getAdresses().add(adress);
+        adress.getPersons().add(this);
+    }
+
+    public void removeAdress(Adress adress){
+        this.getAdresses().remove(adress);
+        adress.getPersons().remove(this);
+    }
     public long getId() {
         return id;
     }

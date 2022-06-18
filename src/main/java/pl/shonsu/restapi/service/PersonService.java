@@ -3,13 +3,17 @@ package pl.shonsu.restapi.service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
 import pl.shonsu.restapi.repository.PersonRepository;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class PersonService {
 
@@ -40,12 +44,15 @@ public class PersonService {
         List<Long> ids = allPersons.stream()
                 .map(Person::getId)
                 .toList();
+        ids.forEach(System.out::println);
         List<Adress> adresses = adressRepository.findAllAdressesByPersonsIdIn(ids);
+        //adresses.forEach(System.out::println);
         allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId())));
         return allPersons;
     }
 
     private List<Adress> extractAdresses(List<Adress> adresses, long id) {
+       // List<Long> ids = adresses.stream().map(Adress::getPersons).toList();
         return adresses.stream()
                 .filter(adress -> adress.getId() == id)
                 .toList();

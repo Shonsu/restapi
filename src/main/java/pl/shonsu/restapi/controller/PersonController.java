@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
+import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.PersonService;
 
@@ -43,4 +44,8 @@ public class PersonController {
         return personService.addPerson(person);
     }
 
+    @GetMapping("/firstPersonWithNullAdress")
+    public Person addAdress() {
+        return personService.getPersonWithAdressNull();
+    }
 }
