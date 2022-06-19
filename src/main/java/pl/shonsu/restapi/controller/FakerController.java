@@ -3,6 +3,10 @@ package pl.shonsu.restapi.controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.shonsu.restapi.controller.dto.AdressDto;
+import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
+import pl.shonsu.restapi.controller.dto.PersonDto;
+import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.AdressService;
@@ -30,18 +34,20 @@ public class FakerController {
         return personService.addPerson(person1);
     }
     @PostMapping("/personWithAdress")
-    public Person addPersonWithAdress() {
-
-        Adress adress1 = dummyPersonService.getDummyAdress();
-        Person person1 = dummyPersonService.getDummyPerson();
-        person1.addAdress(adress1);
-        return personService.addPerson(person1);
+    public PersonDto addPersonWithAdress() {
+        Person person = dummyPersonService.getDummyPersonWithAdress();
+        person = personService.addPerson(person);
+        AdressDto adressDto = AdressDtoMapper.mapToAdressDto(person.getAdresses().get(0));
+        return PersonDtoMapper.mapToPersonDtoWithAdress(person, adressDto);
     }
-    @PostMapping("/adress")
-    public Adress addAdress() {
+    @PostMapping("/adressWithPersonWithNullAdress")
+    public AdressDto addAdress() {
         Person person = personService.getPersonWithAdressNull();
         Adress adress1 = dummyPersonService.getDummyAdress();
         adress1.addPerson(person);
-        return adressService.addAdress(adress1);
+        adress1 = adressService.addAdress(adress1);
+        PersonDto personDto = PersonDtoMapper.mapToPersonDto(person);
+        return AdressDtoMapper.mapToAdressDtoWithPerson(adressService.addAdress(adress1), personDto);
+
     }
 }

@@ -1,9 +1,9 @@
 package pl.shonsu.restapi.controller.dto;
 
 import lombok.Builder;
-import pl.shonsu.restapi.model.Adress;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -12,7 +12,7 @@ public class PersonDto {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private List<AdressDto> adressesDto;
+    private List<AdressDto> adressesDto = new ArrayList<AdressDto>();
 
     public PersonDto(long id, String firstName, String lastName, LocalDate birthDate, List<AdressDto> adressesDto) {
         this.id = id;
@@ -20,6 +20,12 @@ public class PersonDto {
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.adressesDto = adressesDto;
+    }
+
+    public PersonDto(String firstName, String lastName, LocalDate birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
     }
 
     public long getId() {
@@ -41,35 +47,38 @@ public class PersonDto {
     public List<AdressDto> getAdressesDto() {
         return adressesDto;
     }
+
     public void addAdress(AdressDto adress) {
         this.getAdressesDto().add(adress);
-        adress.getPersonsDto().add(this);
     }
+
     public static <PersonDto> PersonDtoBuilder<PersonDto> builder() {
         return new PersonDtoBuilder<PersonDto>();
     }
+
     public static class PersonDtoBuilder<Person> {
 
         private long id;
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
-        private List<AdressDto> adressesDto;
+        private List<AdressDto> adressesDto = new ArrayList<AdressDto>();
+
+        private PersonDtoBuilder() {
+        }
 
         public List<AdressDto> getAdressesDto() {
             return adressesDto;
         }
 
-        public void setAdressesDto(List<AdressDto> adressesDto) {
-            this.adressesDto = adressesDto;
-        }
-
-        public PersonDtoBuilder addAdressDto(AdressDto adressDto){
+        public PersonDtoBuilder addAdressDto(AdressDto adressDto) {
             this.getAdressesDto().add(adressDto);
-            adressDto.getPersonsDto().add(super.Person);
             return this;
         }
-        private PersonDtoBuilder() {
+
+        public PersonDtoBuilder addListOfAdressesDto(List<AdressDto> adressDto) {
+            this.adressesDto = adressDto;
+            return this;
         }
 
         public PersonDtoBuilder id(long id) {
@@ -91,8 +100,9 @@ public class PersonDto {
             this.birthDate = birthDate;
             return this;
         }
-        public PersonDtoBuilder adressDto(List<PersonDto> adressDto) {
-            this.adressesDto = adressesDto;
+
+        public PersonDtoBuilder adressDto(List<AdressDto> adressDto) {
+            this.adressesDto = adressDto;
             return this;
         }
 

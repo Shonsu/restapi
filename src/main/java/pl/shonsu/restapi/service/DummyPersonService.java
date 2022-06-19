@@ -2,6 +2,9 @@ package pl.shonsu.restapi.service;
 
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
+import pl.shonsu.restapi.controller.dto.AdressDto;
+import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
+import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
@@ -24,7 +27,7 @@ public class DummyPersonService {
         return new Faker(new Locale("pl-PL"));
     }
 
-    public Person getDummyPerson(){
+    public Person getDummyPerson() {
         Date date = faker.date().birthday(10, 70);
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return new Person(
@@ -32,7 +35,12 @@ public class DummyPersonService {
                 faker.name().lastName(),
                 localDate);
     }
-
+    public Person getDummyPersonWithAdress() {
+        Person personWithAdress = getDummyPerson();
+        Adress adress = getDummyAdress();
+        personWithAdress.addAdress(adress);
+        return personWithAdress;
+    }
     public Adress getDummyAdress() {
         return new Adress(
                 faker.address().city(),

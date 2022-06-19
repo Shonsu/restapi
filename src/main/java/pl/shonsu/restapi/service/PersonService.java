@@ -4,6 +4,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.shonsu.restapi.controller.dto.AdressDto;
+import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
+import pl.shonsu.restapi.controller.dto.PersonDto;
+import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
@@ -37,25 +41,22 @@ public class PersonService {
         return personRepository.findById(id).orElseThrow();
     }
 
-    public List<Person> getPersonsWithAdresses(int page, Sort.Direction sort) {
+    public List<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
         List<Person> allPersons = personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
                         Sort.by(sort, "id")));
         List<Long> ids = allPersons.stream()
                 .map(Person::getId)
                 .toList();
-        ids.forEach(System.out::println);
         List<Adress> adresses = adressRepository.findAllAdressesByPersonsIdIn(ids);
-        //adresses.forEach(System.out::println);
         allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId())));
-        return allPersons;
+        List<PersonDto> personDto = allPersons.stream().map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(person, AdressDtoMapper.mapToAdressDtos(person.getAdresses()))).toList();
+        return personDto;
     }
 
     private List<Adress> extractAdresses(List<Adress> adresses, long id) {
-       // List<Long> ids = adresses.stream().map(Adress::getPersons).toList();
-        return adresses.stream()
-                .filter(adress -> adress.getId() == id)
-                .toList();
+        return adresses.stream().filter(adress -> adress.getPersons().stream().anyMatch(person -> person.getId() == id)).toList();
+        //return adresses.stream().filter(adress -> adress.getId() == id).toList();
     }
 
     public Person addPerson(Person person) {

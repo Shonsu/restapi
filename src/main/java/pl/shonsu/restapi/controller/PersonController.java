@@ -28,7 +28,7 @@ public class PersonController {
     }
 
     @GetMapping("/persons/adresses")
-    public List<Person> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
+    public List<PersonDto> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
         return personService.getPersonsWithAdresses(pageNumber, sortDirection);
