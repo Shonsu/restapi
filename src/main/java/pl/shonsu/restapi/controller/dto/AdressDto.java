@@ -21,13 +21,6 @@ public class AdressDto {
         this.personsDto = personsDto;
     }
 
-    public AdressDto(String city, String street, String houseNumber, Integer flatNumber) {
-        this.city = city;
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.flatNumber = flatNumber;
-    }
-
     public long getId() {
         return id;
     }
@@ -57,7 +50,7 @@ public class AdressDto {
     }
 
     public static <AdressDto> AdressDtoBuilder<AdressDto> bulider() {
-        return new AdressDtoBuilder<AdressDto>();
+        return new AdressDtoBuilder<>();
     }
 
     public static class AdressDtoBuilder<Adress> {
@@ -77,37 +70,37 @@ public class AdressDto {
             return personsDto;
         }
 
-        public AdressDtoBuilder addPersonDto(PersonDto personDto) {
+        public AdressDtoBuilder<Adress> addPersonDto(PersonDto personDto) {
             this.getPersonsDto().add(personDto);
             return this;
         }
 
-        public AdressDtoBuilder id(long id) {
+        public AdressDtoBuilder<Adress> id(long id) {
             this.id = id;
             return this;
         }
 
-        public AdressDtoBuilder city(String city) {
+        public AdressDtoBuilder<Adress> city(String city) {
             this.city = city;
             return this;
         }
 
-        public AdressDtoBuilder street(String street) {
+        public AdressDtoBuilder<Adress> street(String street) {
             this.street = street;
             return this;
         }
 
-        public AdressDtoBuilder houseNumber(String houseNumber) {
+        public AdressDtoBuilder<Adress> houseNumber(String houseNumber) {
             this.houseNumber = houseNumber;
             return this;
         }
 
-        public AdressDtoBuilder flatNumber(Integer flatNumber) {
+        public AdressDtoBuilder<Adress> flatNumber(Integer flatNumber) {
             this.flatNumber = flatNumber;
             return this;
         }
 
-        public AdressDtoBuilder personsDto(List<PersonDto> personsDto) {
+        public AdressDtoBuilder<Adress> personsDto(List<PersonDto> personsDto) {
             this.personsDto = personsDto;
             return this;
         }
