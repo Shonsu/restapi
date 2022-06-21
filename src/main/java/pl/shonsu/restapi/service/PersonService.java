@@ -49,7 +49,9 @@ public class PersonService {
 
         allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId())));
         return allPersons.stream()
-                .map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(person, AdressDtoMapper.mapToAdressDtos(person.getAdresses())))
+                .map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(
+                        person,
+                        AdressDtoMapper.mapToAdressDtos(person.getAdresses())))
                 .toList();
     }
 

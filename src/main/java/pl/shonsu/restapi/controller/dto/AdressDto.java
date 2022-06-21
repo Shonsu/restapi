@@ -1,5 +1,7 @@
 package pl.shonsu.restapi.controller.dto;
 
+import pl.shonsu.restapi.model.Adress;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +47,9 @@ public class AdressDto {
         return personsDto;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    //    public void setId(long id) {
+//        this.id = id;
+//    }
 
     public static <AdressDto> AdressDtoBuilder<AdressDto> bulider() {
         return new AdressDtoBuilder<>();
@@ -102,6 +104,15 @@ public class AdressDto {
 
         public AdressDtoBuilder<Adress> personsDto(List<PersonDto> personsDto) {
             this.personsDto = personsDto;
+            return this;
+        }
+
+        public AdressDtoBuilder<Adress> baseAdressDto(Adress adress) {
+            //this.id = adress.
+//                    this.city(adress.getCity())
+//                    .street(adress.getStreet())
+//                    .flatNumber(adress.getFlatNumber())
+//                    .houseNumber(adress.getHouseNumber())
             return this;
         }
 

@@ -1,5 +1,6 @@
 package pl.shonsu.restapi.controller.dto;
 
+import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
 import java.util.List;
@@ -15,32 +16,30 @@ public class PersonDtoMapper {
                 .toList();
     }
 
+
     public static PersonDto mapToPersonDto(Person person) {
-        return PersonDto.builder()
-                .id(person.getId())
-                .firstName(person.getFirstName())
-                .lastName(person.getLastName())
-                .birthDatge(person.getBirthDate())
+        return createPersonDtoBuilder(person)
                 .build();
     }
 
-    public static PersonDto mapToPersonDtoWithAdress(Person person, AdressDto adress) {
-        return PersonDto.builder()
-                .id(person.getId())
-                .firstName(person.getFirstName())
-                .lastName(person.getLastName())
-                .birthDatge(person.getBirthDate())
-                .addAdressDto(adress)
+    public static PersonDto mapToPersonDtoWithAdress(Person person, Adress adress) {
+        AdressDto adressDto = AdressDtoMapper.mapToAdressDto(adress);
+        return createPersonDtoBuilder(person)
+                .addAdressDto(adressDto)
                 .build();
     }
 
     public static PersonDto mapToPersonDtoWithAdresses(Person person, List<AdressDto> adresses) {
+        return createPersonDtoBuilder(person)
+                .addListOfAdressesDto(adresses)
+                .build();
+    }
+
+    private static PersonDto.PersonDtoBuilder<?> createPersonDtoBuilder(Person person) {
         return PersonDto.builder()
                 .id(person.getId())
                 .firstName(person.getFirstName())
                 .lastName(person.getLastName())
-                .birthDatge(person.getBirthDate())
-                .addListOfAdressesDto(adresses)
-                .build();
+                .birthDatge(person.getBirthDate());
     }
 }

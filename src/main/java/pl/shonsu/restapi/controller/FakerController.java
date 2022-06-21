@@ -21,6 +21,7 @@ public class FakerController {
     AdressService adressService;
 
     DummyPersonService dummyPersonService;
+
     public FakerController(PersonService personService, AdressService adressService, DummyPersonService dummyPersonService) {
         this.personService = personService;
         this.adressService = adressService;
@@ -33,21 +34,20 @@ public class FakerController {
         Person person1 = dummyPersonService.getDummyPerson();
         return personService.addPerson(person1);
     }
+
     @PostMapping("/personWithAdress")
     public PersonDto addPersonWithAdress() {
         Person person = dummyPersonService.getDummyPersonWithAdress();
         person = personService.addPerson(person);
-        AdressDto adressDto = AdressDtoMapper.mapToAdressDto(person.getAdresses().get(0));
-        return PersonDtoMapper.mapToPersonDtoWithAdress(person, adressDto);
+        return PersonDtoMapper.mapToPersonDtoWithAdress(person, person.getAdresses().get(0));
     }
+
     @PostMapping("/adressWithPersonWithNullAdress")
     public AdressDto addAdress() {
         Person person = personService.getPersonWithAdressNull();
         Adress adress1 = dummyPersonService.getDummyAdress();
         adress1.addPerson(person);
         adress1 = adressService.addAdress(adress1);
-        PersonDto personDto = PersonDtoMapper.mapToPersonDto(person);
-        return AdressDtoMapper.mapToAdressDtoWithPerson(adressService.addAdress(adress1), personDto);
-
+        return AdressDtoMapper.mapToAdressDtoWithPerson(adressService.addAdress(adress1), person);
     }
 }

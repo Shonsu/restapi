@@ -1,12 +1,12 @@
 package pl.shonsu.restapi.controller.dto;
 
-import lombok.Builder;
+import pl.shonsu.restapi.model.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+
 public class PersonDto {
     private long id;
     private String firstName;
