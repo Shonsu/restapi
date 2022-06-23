@@ -13,8 +13,9 @@ import pl.shonsu.restapi.repository.AdressRepository;
 import pl.shonsu.restapi.repository.PersonRepository;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Transactional
 @Service
 public class PersonService {
 
@@ -38,32 +39,44 @@ public class PersonService {
         return personRepository.findById(id).orElseThrow();
     }
 
-    public List<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
+    public Set<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
         List<Person> allPersons = personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
                         Sort.by(sort, "id")));
         List<Long> ids = allPersons.stream()
                 .map(Person::getId)
                 .toList();
-        List<Adress> adresses = adressRepository.findAllAdressesByPersonsIdIn(ids);
+        Set<Adress> adresses = adressRepository.findAllAdressesByPersonsIdIn(ids);
 
         allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId())));
         return allPersons.stream()
                 .map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(
                         person,
-                        AdressDtoMapper.mapToAdressDtos(person.getAdresses())))
-                .toList();
+                        AdressDtoMapper.mapToAdressDtos(person.getAdresses())))//TODO move to Adress class
+                .collect(Collectors.toSet());
     }
 
-    private List<Adress> extractAdresses(List<Adress> adresses, long id) {
-        return adresses.stream().filter(adress -> adress.getPersons().stream().anyMatch(person -> person.getId() == id)).toList();
+    private Set<Adress> extractAdresses(Set<Adress> adresses, long id) {
+        return adresses.stream().
+                filter(adress -> adress.getPersons().stream()
+                        .anyMatch(person -> person.getId() == id)).collect(Collectors.toSet());
     }
+    @Transactional
 
     public Person addPerson(Person person) {
         return personRepository.save(person);
     }
+    @Transactional
+
+    public List<Person> addPersons(List<Person> persons) {
+        return personRepository.saveAll(persons);
+    }
 
     public Person getPersonWithAdressNull() {
         return personRepository.findFirstPersonByAdressesIdIsNull();
+    }
+
+    public Person getPersonById(Long id) {
+        return personRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
     }
 }

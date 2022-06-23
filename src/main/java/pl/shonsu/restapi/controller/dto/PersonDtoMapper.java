@@ -4,6 +4,7 @@ import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
 import java.util.List;
+import java.util.Set;
 
 public class PersonDtoMapper {
 
@@ -29,13 +30,13 @@ public class PersonDtoMapper {
                 .build();
     }
 
-    public static PersonDto mapToPersonDtoWithAdresses(Person person, List<AdressDto> adresses) {
+    public static PersonDto mapToPersonDtoWithAdresses(Person person, Set<AdressDto> adresses) {
         return createPersonDtoBuilder(person)
                 .addListOfAdressesDto(adresses)
                 .build();
     }
 
-    private static PersonDto.PersonDtoBuilder<?> createPersonDtoBuilder(Person person) {
+    private static PersonDto.PersonDtoBuilder createPersonDtoBuilder(Person person) {
         return PersonDto.builder()
                 .id(person.getId())
                 .firstName(person.getFirstName())

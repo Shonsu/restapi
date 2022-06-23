@@ -4,11 +4,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
-import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.PersonService;
 
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/api/doc")
 @RestController
@@ -28,7 +28,7 @@ public class PersonController {
     }
 
     @GetMapping("/persons/adresses")
-    public List<PersonDto> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
+    public Set<PersonDto> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
         return personService.getPersonsWithAdresses(pageNumber, sortDirection);
@@ -40,7 +40,7 @@ public class PersonController {
     }
 
     @PostMapping("/person")
-    public Person addPerson(@RequestBody Person person){
+    public Person addPerson(@RequestBody Person person) {
         return personService.addPerson(person);
     }
 

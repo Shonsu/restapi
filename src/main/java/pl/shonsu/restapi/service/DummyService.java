@@ -2,9 +2,6 @@ package pl.shonsu.restapi.service;
 
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
-import pl.shonsu.restapi.controller.dto.AdressDto;
-import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
-import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
@@ -15,7 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @Component
-public class DummyPersonService {
+public class DummyService {
     private Faker faker;
 
     @PostConstruct
@@ -48,5 +45,4 @@ public class DummyPersonService {
                 faker.address().buildingNumber(),
                 faker.number().numberBetween(1, 1000));
     }
-
 }

@@ -1,8 +1,8 @@
 package pl.shonsu.restapi.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Adress {
@@ -14,21 +14,21 @@ public class Adress {
     private String houseNumber;
     private Integer flatNumber;
 
-    @ManyToMany(mappedBy = "adresses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Person> persons = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private Set<Person> persons = new HashSet<>();
 
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
-    }
+//    public void setPersons(Set<Person> persons) {
+//        this.persons = persons;
+//    }
 
-    public List<Person> getPersons() {
+    public Set<Person> getPersons() {
         return persons;
     }
 
     public Adress() {
     }
 
-    public Adress(long id, String city, String street, String houseNumber, Integer flatNumber, List<Person> persons) {
+    public Adress(long id, String city, String street, String houseNumber, Integer flatNumber, Set<Person> persons) {
         this.id = id;
         this.city = city;
         this.street = street;

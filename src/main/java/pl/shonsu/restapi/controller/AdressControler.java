@@ -9,7 +9,7 @@ import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.service.AdressService;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 public class AdressControler {
@@ -21,7 +21,7 @@ public class AdressControler {
     }
 
     @GetMapping("/adresses")
-    public List<AdressDto> getAdresses() {
+    public Set<AdressDto> getAdresses() {
         return AdressDtoMapper.mapToAdressDtos(adressService.getAdresses());
     }
 

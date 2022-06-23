@@ -1,7 +1,5 @@
 package pl.shonsu.restapi.controller.dto;
 
-import pl.shonsu.restapi.model.Adress;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,15 +45,11 @@ public class AdressDto {
         return personsDto;
     }
 
-    //    public void setId(long id) {
-//        this.id = id;
-//    }
-
-    public static <AdressDto> AdressDtoBuilder<AdressDto> bulider() {
-        return new AdressDtoBuilder<>();
+    public static AdressDtoBuilder bulider() {
+        return new AdressDtoBuilder();
     }
 
-    public static class AdressDtoBuilder<Adress> {
+    public static class AdressDtoBuilder {
 
         private long id;
         private String city;
@@ -72,47 +66,38 @@ public class AdressDto {
             return personsDto;
         }
 
-        public AdressDtoBuilder<Adress> addPersonDto(PersonDto personDto) {
+        public AdressDtoBuilder addPersonDto(PersonDto personDto) {
             this.getPersonsDto().add(personDto);
             return this;
         }
 
-        public AdressDtoBuilder<Adress> id(long id) {
+        public AdressDtoBuilder id(long id) {
             this.id = id;
             return this;
         }
 
-        public AdressDtoBuilder<Adress> city(String city) {
+        public AdressDtoBuilder city(String city) {
             this.city = city;
             return this;
         }
 
-        public AdressDtoBuilder<Adress> street(String street) {
+        public AdressDtoBuilder street(String street) {
             this.street = street;
             return this;
         }
 
-        public AdressDtoBuilder<Adress> houseNumber(String houseNumber) {
+        public AdressDtoBuilder houseNumber(String houseNumber) {
             this.houseNumber = houseNumber;
             return this;
         }
 
-        public AdressDtoBuilder<Adress> flatNumber(Integer flatNumber) {
+        public AdressDtoBuilder flatNumber(Integer flatNumber) {
             this.flatNumber = flatNumber;
             return this;
         }
 
-        public AdressDtoBuilder<Adress> personsDto(List<PersonDto> personsDto) {
+        public AdressDtoBuilder personsDto(List<PersonDto> personsDto) {
             this.personsDto = personsDto;
-            return this;
-        }
-
-        public AdressDtoBuilder<Adress> baseAdressDto(Adress adress) {
-            //this.id = adress.
-//                    this.city(adress.getCity())
-//                    .street(adress.getStreet())
-//                    .flatNumber(adress.getFlatNumber())
-//                    .houseNumber(adress.getHouseNumber())
             return this;
         }
 

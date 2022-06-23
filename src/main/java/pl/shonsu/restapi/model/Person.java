@@ -2,8 +2,8 @@ package pl.shonsu.restapi.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Person {
@@ -19,12 +19,12 @@ public class Person {
             name = "adress_person",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "adress_id"))
-    private List<Adress> adresses = new ArrayList<>();
+    private Set<Adress> adresses = new HashSet<>();
 
     public Person() {
     }
 
-    public Person(Long id, String firstName, String lastName, LocalDate birthDate, List<Adress> adresses) {
+    public Person(Long id, String firstName, String lastName, LocalDate birthDate, Set<Adress> adresses) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -39,7 +39,7 @@ public class Person {
     }
 
     public void addAdress(Adress adress) {
-        this.getAdresses().add(adress);
+        this.adresses.add(adress);
         adress.getPersons().add(this);
     }
 
@@ -59,31 +59,31 @@ public class Person {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+//    public void setLastName(String lastName) {
+//        this.lastName = lastName;
+//    }
 
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
+//    public void setBirthDate(LocalDate birthDate) {
+//        this.birthDate = birthDate;
+//    }
 
-    public void setAdresses(List<Adress> adresses) {
+    public void setAdresses(Set<Adress> adresses) {
         this.adresses = adresses;
     }
 
-    public List<Adress> getAdresses() {
+    public Set<Adress> getAdresses() {
         return adresses;
     }
 

@@ -2,52 +2,60 @@ package pl.shonsu.restapi.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.shonsu.restapi.controller.dto.AdressDto;
-import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
 import pl.shonsu.restapi.controller.dto.PersonDto;
-import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
-import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.AdressService;
-import pl.shonsu.restapi.service.DummyPersonService;
+import pl.shonsu.restapi.service.FakerService;
 import pl.shonsu.restapi.service.PersonService;
+
+import java.util.List;
 
 @RequestMapping("/api/faker")
 @RestController
 public class FakerController {
     PersonService personService;
-
     AdressService adressService;
+    FakerService fakerService;
 
-    DummyPersonService dummyPersonService;
-
-    public FakerController(PersonService personService, AdressService adressService, DummyPersonService dummyPersonService) {
+    public FakerController(PersonService personService, AdressService adressService, FakerService fakerService) {
         this.personService = personService;
         this.adressService = adressService;
-        this.dummyPersonService = dummyPersonService;
+        this.fakerService = fakerService;
     }
 
     @PostMapping("/person")
     public Person addPerson() {
+        return fakerService.addDummyPerson();
+    }
 
-        Person person1 = dummyPersonService.getDummyPerson();
-        return personService.addPerson(person1);
+    @PostMapping("/persons")
+    public List<Person> addPersons(@RequestParam(required = false) Integer number) {
+        number = number > 0 ? number : 1;
+        return fakerService.addDummyPersons(number);
     }
 
     @PostMapping("/personWithAdress")
     public PersonDto addPersonWithAdress() {
-        Person person = dummyPersonService.getDummyPersonWithAdress();
-        person = personService.addPerson(person);
-        return PersonDtoMapper.mapToPersonDtoWithAdress(person, person.getAdresses().get(0));
+        return fakerService.addDummyPersonWithAdress();
     }
 
-    @PostMapping("/adressWithPersonWithNullAdress")
-    public AdressDto addAdress() {
-        Person person = personService.getPersonWithAdressNull();
-        Adress adress1 = dummyPersonService.getDummyAdress();
-        adress1.addPerson(person);
-        adress1 = adressService.addAdress(adress1);
-        return AdressDtoMapper.mapToAdressDtoWithPerson(adressService.addAdress(adress1), person);
+    @PostMapping("/personsWithAdress")
+    public List<PersonDto> addPersonsWithAdress(@RequestParam(required = false) Integer numberOfPersons) {
+        numberOfPersons = numberOfPersons > 0 ? numberOfPersons : 1;
+        return fakerService.addPersonsWithAdress(numberOfPersons);
     }
+
+    @PostMapping("/adressToPersonWithNullAdress")
+    public AdressDto addAdressToPersonWithNullAdress() {
+        return fakerService.addAdressToPersonWithNullAdress();
+    }
+
+    @PostMapping("/bindAdressToPerson")
+    public PersonDto bindAdressToPerson(@RequestParam Long personId, Long adressId) {
+        return fakerService.bindAdressToPerson(personId,adressId);
+    }
+
 }
