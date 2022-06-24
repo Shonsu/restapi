@@ -36,11 +36,11 @@ public class PersonDto {
         return birthDate;
     }
 
-    public Set<AdressDto> getAdressesDto() {
+    private Set<AdressDto> getAdressesDto() {
         return adressesDto;
     }
 
-    public void addAdress(AdressDto adress) {
+    private void addAdress(AdressDto adress) {
         this.getAdressesDto().add(adress);
     }
 
