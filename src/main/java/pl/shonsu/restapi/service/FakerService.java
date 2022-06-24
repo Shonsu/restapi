@@ -2,10 +2,7 @@ package pl.shonsu.restapi.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.shonsu.restapi.controller.dto.AdressDto;
-import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
-import pl.shonsu.restapi.controller.dto.PersonDto;
-import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
+import pl.shonsu.restapi.controller.dto.*;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
@@ -29,6 +26,7 @@ public class FakerService {
 
     @Transactional
     public Person addDummyPerson() {
+        //PersonDto2 person  =
         return personService.addPerson(dummyService.getDummyPerson());
     }
     @Transactional

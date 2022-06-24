@@ -7,5 +7,5 @@ public record PersonDto2(long id,
                          String firstName,
                          String lastName,
                          LocalDate birthDate,
-                         Set<AdressDto2> adresses) {
+                         Set<AdressDto2> adressesDto2) {
 }

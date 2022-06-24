@@ -17,9 +17,6 @@ public class Adress {
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<Person> persons = new HashSet<>();
 
-//    public void setPersons(Set<Person> persons) {
-//        this.persons = persons;
-//    }
 
     public Set<Person> getPersons() {
         return persons;
