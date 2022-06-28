@@ -1,9 +1,7 @@
 package pl.shonsu.restapi.controller.dto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
-
 
 public class PersonDto {
     private long id;
@@ -12,13 +10,11 @@ public class PersonDto {
     private LocalDate birthDate;
     private Set<AdressDto> adressesDto;
 
-    public PersonDto(long id, String firstName, String lastName, LocalDate birthDate, Set<AdressDto> adressesDto) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.adressesDto = adressesDto;
+    public PersonDto(){}
+
+    public PersonDto(String firstName, String lastName, LocalDate birthDate) {
     }
+
 
     public long getId() {
         return id;
@@ -36,76 +32,61 @@ public class PersonDto {
         return birthDate;
     }
 
-    private Set<AdressDto> getAdressesDto() {
+    public Set<AdressDto> getAdressesDto() {
         return adressesDto;
     }
 
-    private void addAdress(AdressDto adress) {
-        this.getAdressesDto().add(adress);
+    public void setAdressesDto(Set<AdressDto> adressesDto) {
+        this.adressesDto = adressesDto;
     }
-
-    public static PersonDtoBuilder builder() {
-        return new PersonDtoBuilder();
-    }
-
-    public static class PersonDtoBuilder {
+    public static final class PersonDtoBuilder {
 
         private long id;
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
-        private Set<AdressDto> adressesDto = new HashSet<>();
+        private Set<AdressDto> adressesDto;
 
         private PersonDtoBuilder() {
         }
 
-        public Set<AdressDto> getAdressesDto() {
-            return adressesDto;
+        public static PersonDtoBuilder aPersonDto() {
+            return new PersonDtoBuilder();
         }
 
-        public PersonDtoBuilder addAdressDto(AdressDto adressDto) {
-            this.getAdressesDto().add(adressDto);
-            return this;
-        }
-
-        public PersonDtoBuilder addListOfAdressesDto(Set<AdressDto> adressDto) {
-            this.adressesDto = adressDto;
-            return this;
-        }
-
-        public PersonDtoBuilder id(long id) {
+        public PersonDtoBuilder withId(long id) {
             this.id = id;
             return this;
         }
 
-        public PersonDtoBuilder firstName(String firstName) {
+        public PersonDtoBuilder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public PersonDtoBuilder lastName(String lastName) {
+        public PersonDtoBuilder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public PersonDtoBuilder birthDatge(LocalDate birthDate) {
+        public PersonDtoBuilder withBirthDate(LocalDate birthDate) {
             this.birthDate = birthDate;
             return this;
         }
 
-        public PersonDtoBuilder adressDto(Set<AdressDto> adressDto) {
-            this.adressesDto = adressDto;
+        public PersonDtoBuilder withAdressesDto(Set<AdressDto> adressesDto) {
+            this.adressesDto = adressesDto;
             return this;
         }
 
         public PersonDto build() {
-            return new PersonDto(id, firstName, lastName, birthDate, adressesDto);
+            PersonDto personDto = new PersonDto();
+            personDto.lastName = this.lastName;
+            personDto.id = this.id;
+            personDto.birthDate = this.birthDate;
+            personDto.adressesDto = this.adressesDto;
+            personDto.firstName = this.firstName;
+            return personDto;
         }
-
-        @java.lang.Override
-        public String toString() {
-            return "ExampleBuilder(id = " + id + ", firstName = " + firstName + "lastName" + lastName + "birthDate" + birthDate + ")";
-        }
-
     }
 }

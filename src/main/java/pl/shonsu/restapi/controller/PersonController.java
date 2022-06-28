@@ -3,12 +3,13 @@ package pl.shonsu.restapi.controller;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import pl.shonsu.restapi.controller.dto.PersonDto;
-import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.PersonService;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
+
+import static pl.shonsu.restapi.controller.mapper.PersonDtoMapper.mapPersonToPersonDto;
 
 @RequestMapping("/api/doc")
 @RestController
@@ -21,10 +22,10 @@ public class PersonController {
     }
 
     @GetMapping("/persons")
-    public List<PersonDto> getPerson(@RequestParam(required = false) Integer page, Sort.Direction sort) {
+    public Set<PersonDto> getPerson(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
-        return PersonDtoMapper.mapToPersonDtos(personService.getPersons(pageNumber, sortDirection));
+        return mapPersonToPersonDto(new HashSet<>(personService.getPersons(pageNumber, sortDirection)));
     }
 
     @GetMapping("/persons/adresses")

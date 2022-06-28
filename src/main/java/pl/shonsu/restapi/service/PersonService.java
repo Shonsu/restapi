@@ -4,17 +4,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.shonsu.restapi.controller.dto.AdressDtoMapper;
 import pl.shonsu.restapi.controller.dto.PersonDto;
-import pl.shonsu.restapi.controller.dto.PersonDtoMapper;
+import pl.shonsu.restapi.controller.mapper.PersonDtoMapper;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
 import pl.shonsu.restapi.repository.PersonRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static pl.shonsu.restapi.controller.mapper.AdressDtoMapper.mapToAdressesDto;
 
 @Service
 public class PersonService {
@@ -22,7 +25,6 @@ public class PersonService {
     private static final int PAGE_SIZE = 20;
     private final PersonRepository personRepository;
     private final AdressRepository adressRepository;
-
 
     public PersonService(PersonRepository personRepository, AdressRepository adressRepository) {
         this.personRepository = personRepository;
@@ -52,7 +54,7 @@ public class PersonService {
         return allPersons.stream()
                 .map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(
                         person,
-                        AdressDtoMapper.mapToAdressDtos(person.getAdresses())))//TODO move to Adress class
+                        new HashSet<>(person.getAdresses())))//TODO move to Adress class
                 .collect(Collectors.toSet());
     }
 
@@ -61,15 +63,18 @@ public class PersonService {
                 filter(adress -> adress.getPersons().stream()
                         .anyMatch(person -> person.getId() == id)).collect(Collectors.toSet());
     }
-    @Transactional
 
+    @Transactional
     public Person addPerson(Person person) {
         return personRepository.save(person);
     }
+
     @Transactional
 
-    public List<Person> addPersons(List<Person> persons) {
-        return personRepository.saveAll(persons);
+    public Set<PersonDto> addPersons(Set<Person> persons) {
+        Set<Person> person = new HashSet<>(personRepository.saveAll(persons));
+        //TODO  PersonDto.PersonDtoBuilder.aPersonDto().
+        return null;
     }
 
     public Person getPersonWithAdressNull() {

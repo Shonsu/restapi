@@ -2,18 +2,26 @@ package pl.shonsu.restapi.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.shonsu.restapi.controller.dto.*;
+import pl.shonsu.restapi.controller.dto.AdressDto;
+import pl.shonsu.restapi.controller.dto.PersonDto;
+import pl.shonsu.restapi.controller.mapper.PersonMapper;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static pl.shonsu.restapi.controller.mapper.AdressMapper.mapToAdress;
+import static pl.shonsu.restapi.controller.mapper.PersonDtoMapper.mapToPersonDtoWithAdresses;
+import static pl.shonsu.restapi.controller.mapper.PersonMapper.mapToPerson;
+import static pl.shonsu.restapi.controller.mapper.PersonMapper.mapToPersons;
 
 @Service
 public class FakerService {
 
+    private static final Long EMPTY_ID = null;
     DummyService dummyService;
     PersonService personService;
     AdressService adressService;
@@ -25,47 +33,58 @@ public class FakerService {
     }
 
     @Transactional
-    public Person addDummyPerson() {
-        //PersonDto2 person  =
-        return personService.addPerson(dummyService.getDummyPerson());
+    public PersonDto addDummyPerson() {
+        PersonDto personDto = dummyService.getDummyPerson();
+        personService.addPerson(mapToPerson(EMPTY_ID, personDto));
+        return personDto;
     }
+
     @Transactional
-    public List<Person> addDummyPersons(Integer number) {
-        List<Person> personList;
-        Supplier<Person> s = () -> dummyService.getDummyPerson();
-        personList = Stream.generate(s).limit(number).toList();
-        return personService.addPersons(personList);
+    public Set<PersonDto> addDummyPersons(Integer number) {
+        Set<PersonDto> personList;
+        Supplier<PersonDto> s = () -> dummyService.getDummyPerson();
+        personList = Stream.generate(s).limit(number).collect(Collectors.toSet());
+        Set<Person> persons = personList.stream()
+                .map(personDto -> mapToPerson(EMPTY_ID, personDto)).collect(Collectors.toSet());
+        personService.addPersons(persons);
+        return personList;
     }
+
     @Transactional
     public PersonDto addDummyPersonWithAdress() {
-        Person person = dummyService.getDummyPersonWithAdress();
+        PersonDto personDto = dummyService.getDummyPersonWithAdress();
+        Person person = PersonMapper.mapToPersonWithAdresses(personDto);
         person = personService.addPerson(person);
-        return PersonDtoMapper.mapToPersonDtoWithAdress(person, person.getAdresses().iterator().next());
+        personDto = mapToPersonDtoWithAdresses(person, person.getAdresses());
+        return personDto;
     }
+
+
     @Transactional
-    public List<PersonDto> addPersonsWithAdress(Integer numberOfPersons) {
-        List<Person> personList;
-        Supplier<Person> s = () -> dummyService.getDummyPersonWithAdress();
-        personList = Stream.generate(s).limit(numberOfPersons).toList();
-        personList = personService.addPersons(personList);
-        return personList.stream()
-                .map(person -> PersonDtoMapper.mapToPersonDtoWithAdress(person, person.getAdresses().iterator().next()))
-                .toList();
+    public Set<PersonDto> addPersonsWithAdress(Integer numberOfPersons) {
+        Set<PersonDto> personList;
+        Supplier<PersonDto> s = () -> dummyService.getDummyPersonWithAdress();
+        personList = Stream.generate(s).limit(numberOfPersons).collect(Collectors.toSet());
+        personList = personService.addPersons(mapToPersons(personList));
+        return personList;
     }
+
     @Transactional
-    public AdressDto addAdressToPersonWithNullAdress() {
+    public PersonDto addAdressToPersonWithNullAdress() {
         Person person = personService.getPersonWithAdressNull();
-        Adress adress = dummyService.getDummyAdress();
-        adress.addPerson(person);
-        adress = adressService.addAdress(adress);
-        return AdressDtoMapper.mapToAdressDtoWithPerson(adressService.addAdress(adress), person);
+        AdressDto adressDto = dummyService.getDummyAdress();
+        person.addAdress(mapToAdress(EMPTY_ID, adressDto));
+        person = personService.addPerson(person);
+        return mapToPersonDtoWithAdresses(person, person.getAdresses());
     }
+
+
     @Transactional
     public PersonDto bindAdressToPerson(Long personId, Long adressId) {
         Person person = personService.getPersonById(personId);
         Adress adress = adressService.getAdressById(adressId);
         person.addAdress(adress);
         person = personService.addPerson(person);
-        return PersonDtoMapper.mapToPersonDtoWithAdress(person, adress);
+        return mapToPersonDtoWithAdresses(person, person.getAdresses());
     }
 }

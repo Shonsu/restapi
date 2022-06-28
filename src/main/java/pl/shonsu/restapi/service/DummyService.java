@@ -2,14 +2,15 @@ package pl.shonsu.restapi.service;
 
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
-import pl.shonsu.restapi.model.Adress;
-import pl.shonsu.restapi.model.Person;
+import pl.shonsu.restapi.controller.dto.AdressDto;
+import pl.shonsu.restapi.controller.dto.PersonDto;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 
 @Component
 public class DummyService {
@@ -24,22 +25,22 @@ public class DummyService {
         return new Faker(new Locale("pl-PL"));
     }
 
-    public Person getDummyPerson() {
+    public PersonDto getDummyPerson() {
         Date date = faker.date().birthday(10, 70);
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return new Person(
+        return new PersonDto(
                 faker.name().firstName(),
                 faker.name().lastName(),
                 localDate);
     }
-    public Person getDummyPersonWithAdress() {
-        Person personWithAdress = getDummyPerson();
-        Adress adress = getDummyAdress();
-        personWithAdress.addAdress(adress);
+    public PersonDto getDummyPersonWithAdress() {
+        PersonDto personWithAdress = getDummyPerson();
+        AdressDto adress = getDummyAdress();
+        personWithAdress.setAdressesDto(Set.of(adress));
         return personWithAdress;
     }
-    public Adress getDummyAdress() {
-        return new Adress(
+    public AdressDto getDummyAdress() {
+        return new AdressDto(
                 faker.address().city(),
                 faker.address().streetName(),
                 faker.address().buildingNumber(),

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import pl.shonsu.restapi.model.Person;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
@@ -16,12 +17,12 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     List<Person> findAllPersons(Pageable pageable);
 
     @Query("select p from Person p where p.firstName = ?1")
-    List<Person> findAllByFirstName(String name);
+    Set<Person> findAllByFirstName(String name);
 
     @Query("select p from Person p where p.lastName = :name")
-    List<Person> findAllByLastName(@Param("name") String name);
+    Set<Person> findAllByLastName(@Param("name") String name);
 
-    List<Person> findAllByFirstNameAndLastName(String firstName, String lastName);
+    Set<Person> findAllByFirstNameAndLastName(String firstName, String lastName);
 
     Person findFirstPersonByAdressesIdIsNull();
 }

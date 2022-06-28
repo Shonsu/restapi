@@ -12,6 +12,7 @@ import pl.shonsu.restapi.service.FakerService;
 import pl.shonsu.restapi.service.PersonService;
 
 import java.util.List;
+import java.util.Set;
 
 @RequestMapping("/api/faker")
 @RestController
@@ -27,12 +28,12 @@ public class FakerController {
     }
 
     @PostMapping("/person")
-    public Person addPerson() {
+    public PersonDto addPerson() {
         return fakerService.addDummyPerson();
     }
 
     @PostMapping("/persons")
-    public List<Person> addPersons(@RequestParam(required = false) Integer number) {
+    public Set<PersonDto> addPersons(@RequestParam(required = false) Integer number) {
         number = number > 0 ? number : 1;
         return fakerService.addDummyPersons(number);
     }
@@ -43,13 +44,13 @@ public class FakerController {
     }
 
     @PostMapping("/personsWithAdress")
-    public List<PersonDto> addPersonsWithAdress(@RequestParam(required = false) Integer numberOfPersons) {
+    public Set<PersonDto> addPersonsWithAdress(@RequestParam(required = false) Integer numberOfPersons) {
         numberOfPersons = numberOfPersons > 0 ? numberOfPersons : 1;
         return fakerService.addPersonsWithAdress(numberOfPersons);
     }
 
     @PostMapping("/adressToPersonWithNullAdress")
-    public AdressDto addAdressToPersonWithNullAdress() {
+    public PersonDto addAdressToPersonWithNullAdress() {
         return fakerService.addAdressToPersonWithNullAdress();
     }
 

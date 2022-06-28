@@ -1,7 +1,6 @@
 package pl.shonsu.restapi.controller.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 public class AdressDto {
     private long id;
@@ -10,15 +9,18 @@ public class AdressDto {
     private String houseNumber;
     private Integer flatNumber;
 
-    private List<PersonDto> personsDto;
+    public void setPersonsDto(Set<PersonDto> personsDto) {
+        this.personsDto = personsDto;
+    }
 
-    public AdressDto(long id, String city, String street, String houseNumber, Integer flatNumber, List<PersonDto> personsDto) {
-        this.id = id;
+    private Set<PersonDto> personsDto;
+
+    public AdressDto() {
+    }
+
+    public AdressDto(String city, String street, String houseNumber, Integer flatNumber) {
         this.city = city;
         this.street = street;
-        this.houseNumber = houseNumber;
-        this.flatNumber = flatNumber;
-        this.personsDto = personsDto;
     }
 
     public long getId() {
@@ -41,73 +43,64 @@ public class AdressDto {
         return flatNumber;
     }
 
-    public List<PersonDto> getPersonsDto() {
+    public Set<PersonDto> getPersonsDto() {
         return personsDto;
     }
 
-    public static AdressDtoBuilder bulider() {
-        return new AdressDtoBuilder();
-    }
-
-    public static class AdressDtoBuilder {
-
+    public static final class AdressDtoBuilder {
         private long id;
         private String city;
         private String street;
         private String houseNumber;
         private Integer flatNumber;
-
-        private List<PersonDto> personsDto = new ArrayList<>();
+        private Set<PersonDto> personsDto;
 
         private AdressDtoBuilder() {
         }
 
-        public List<PersonDto> getPersonsDto() {
-            return personsDto;
+        public static AdressDtoBuilder anAdressDto() {
+            return new AdressDtoBuilder();
         }
 
-        public AdressDtoBuilder addPersonDto(PersonDto personDto) {
-            this.getPersonsDto().add(personDto);
-            return this;
-        }
-
-        public AdressDtoBuilder id(long id) {
+        public AdressDtoBuilder withId(long id) {
             this.id = id;
             return this;
         }
 
-        public AdressDtoBuilder city(String city) {
+        public AdressDtoBuilder withCity(String city) {
             this.city = city;
             return this;
         }
 
-        public AdressDtoBuilder street(String street) {
+        public AdressDtoBuilder withStreet(String street) {
             this.street = street;
             return this;
         }
 
-        public AdressDtoBuilder houseNumber(String houseNumber) {
+        public AdressDtoBuilder withHouseNumber(String houseNumber) {
             this.houseNumber = houseNumber;
             return this;
         }
 
-        public AdressDtoBuilder flatNumber(Integer flatNumber) {
+        public AdressDtoBuilder withFlatNumber(Integer flatNumber) {
             this.flatNumber = flatNumber;
             return this;
         }
 
-        public AdressDtoBuilder personsDto(List<PersonDto> personsDto) {
+        public AdressDtoBuilder withPersonsDto(Set<PersonDto> personsDto) {
             this.personsDto = personsDto;
             return this;
         }
 
-        public AdressDto bulid() {
-            return new AdressDto(id, city, street, houseNumber, flatNumber, personsDto);
-        }
-
-        @java.lang.Override
-        public String toString() {
-            return "ExampleBuilder(id = " + id + ", city = " + city + "street" + street + "houseNumber" + houseNumber + "flatNumber" + flatNumber + "personsDto" + personsDto + ")";
+        public AdressDto build() {
+            AdressDto adressDto = new AdressDto();
+            adressDto.street = this.street;
+            adressDto.houseNumber = this.houseNumber;
+            adressDto.city = this.city;
+            adressDto.flatNumber = this.flatNumber;
+            adressDto.personsDto = this.personsDto;
+            adressDto.id = this.id;
+            return adressDto;
         }
     }
 }
