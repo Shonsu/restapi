@@ -1,5 +1,6 @@
 package pl.shonsu.restapi.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,10 @@ import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
 import pl.shonsu.restapi.repository.PersonRepository;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static pl.shonsu.restapi.controller.mapper.AdressDtoMapper.mapToAdressesDto;
 
 @Service
 public class PersonService {
@@ -31,37 +29,45 @@ public class PersonService {
         this.adressRepository = adressRepository;
     }
 
-    public List<Person> getPersons(int page, Sort.Direction sort) {
+    public Page<Person> getPersons(int page, Sort.Direction sort) {
         return personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
                         Sort.by(sort, "id")));
-    }
 
-    public Person getSinglePerson(long id) {
-        return personRepository.findById(id).orElseThrow();
     }
+//    public List<PersonDto> getPersons2(int page, Sort.Direction sort) {
+//        return getAll(
+//                PageRequest.of(page, PAGE_SIZE,
+//                        Sort.by(sort, "id")));
+//
+//    }
+//    List<PersonDto> getAll(Pageable pageable){
+//        Page<Person> page = personRepository.findAll(pageable); // Page<User>
+//        return new PageImpl<PersonDto>(mapToPersonsDtoList(page.getContent()), pageable, page.getTotalElements()).toList();
+//    }
 
-    public Set<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
-        List<Person> allPersons = personRepository.findAllPersons(
+    public List<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
+        Page<Person> allPersons = personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
                         Sort.by(sort, "id")));
         List<Long> ids = allPersons.stream()
                 .map(Person::getId)
                 .toList();
         Set<Adress> adresses = adressRepository.findAllAdressesByPersonsIdIn(ids);
-
-        allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId())));
+        allPersons.stream().forEach(person -> System.out.println(person.getId()));
+        allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId()))); //todo move to adress class
         return allPersons.stream()
                 .map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(
                         person,
-                        new HashSet<>(person.getAdresses())))//TODO move to Adress class
-                .collect(Collectors.toSet());
+                        person.getAdresses()))
+                .toList();
     }
 
     private Set<Adress> extractAdresses(Set<Adress> adresses, long id) {
         return adresses.stream().
                 filter(adress -> adress.getPersons().stream()
-                        .anyMatch(person -> person.getId() == id)).collect(Collectors.toSet());
+                        .anyMatch(person -> person.getId() == id))
+                .collect(Collectors.toSet());
     }
 
     @Transactional
@@ -70,11 +76,9 @@ public class PersonService {
     }
 
     @Transactional
-
-    public Set<PersonDto> addPersons(Set<Person> persons) {
-        Set<Person> person = new HashSet<>(personRepository.saveAll(persons));
-        //TODO  PersonDto.PersonDtoBuilder.aPersonDto().
-        return null;
+    public List<Person> addPersons(List<Person> persons) {
+        persons = personRepository.saveAll(persons);
+        return persons;
     }
 
     public Person getPersonWithAdressNull() {

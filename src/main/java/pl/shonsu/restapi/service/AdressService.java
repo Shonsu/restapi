@@ -23,9 +23,6 @@ public class AdressService {
         return mapToAdressesDto(new HashSet<>(adressRepository.findAll()));
     }
 
-    public Adress getSingleAdress(long id) {
-        return adressRepository.findById(id).orElseThrow();
-    }
 
     @Transactional
     public Adress addAdress(Adress adress) {
@@ -33,8 +30,9 @@ public class AdressService {
     }
 
     public Adress getAdressById(Long id) {
-        return adressRepository.findById(id)
+        Adress adress = adressRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Can't find adress by given id " + id));
+        return adress;
     }
 
 

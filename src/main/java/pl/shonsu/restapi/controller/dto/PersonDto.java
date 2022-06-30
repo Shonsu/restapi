@@ -1,6 +1,9 @@
 package pl.shonsu.restapi.controller.dto;
 
+import pl.shonsu.restapi.model.Person;
+
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 public class PersonDto {
@@ -8,11 +11,17 @@ public class PersonDto {
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
-    private Set<AdressDto> adressesDto;
+    private Set<AdressDto> adressesDto = new HashSet<>();
 
     public PersonDto(){}
 
     public PersonDto(String firstName, String lastName, LocalDate birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
+
+    public PersonDto(Person person) {
     }
 
 
@@ -36,6 +45,11 @@ public class PersonDto {
         return adressesDto;
     }
 
+
+//    public void addAddres(AdressDto adressDto){
+//        this.adressesDto.add(adressDto);
+//        adressDto.getPersonsDto().add(this);
+//    }
     public void setAdressesDto(Set<AdressDto> adressesDto) {
         this.adressesDto = adressesDto;
     }

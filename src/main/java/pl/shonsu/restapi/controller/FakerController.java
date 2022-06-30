@@ -4,15 +4,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.shonsu.restapi.controller.dto.AdressDto;
 import pl.shonsu.restapi.controller.dto.PersonDto;
-import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.service.AdressService;
 import pl.shonsu.restapi.service.FakerService;
 import pl.shonsu.restapi.service.PersonService;
 
 import java.util.List;
-import java.util.Set;
 
 @RequestMapping("/api/faker")
 @RestController
@@ -28,33 +25,39 @@ public class FakerController {
     }
 
     @PostMapping("/person")
+    @SuppressWarnings("unused")
     public PersonDto addPerson() {
         return fakerService.addDummyPerson();
     }
 
     @PostMapping("/persons")
-    public Set<PersonDto> addPersons(@RequestParam(required = false) Integer number) {
+    @SuppressWarnings("unused")
+    public List<PersonDto> addPersons(@RequestParam(required = false) Integer number) {
         number = number > 0 ? number : 1;
         return fakerService.addDummyPersons(number);
     }
 
     @PostMapping("/personWithAdress")
+    @SuppressWarnings("unused")
     public PersonDto addPersonWithAdress() {
         return fakerService.addDummyPersonWithAdress();
     }
 
     @PostMapping("/personsWithAdress")
-    public Set<PersonDto> addPersonsWithAdress(@RequestParam(required = false) Integer numberOfPersons) {
+    @SuppressWarnings("unused")
+    public List<PersonDto> addPersonsWithAdress(@RequestParam(required = false) Integer numberOfPersons) {
         numberOfPersons = numberOfPersons > 0 ? numberOfPersons : 1;
-        return fakerService.addPersonsWithAdress(numberOfPersons);
+        return fakerService.addDummyPersonsWithAdress(numberOfPersons);
     }
 
     @PostMapping("/adressToPersonWithNullAdress")
+    @SuppressWarnings("unused")
     public PersonDto addAdressToPersonWithNullAdress() {
         return fakerService.addAdressToPersonWithNullAdress();
     }
 
     @PostMapping("/bindAdressToPerson")
+    @SuppressWarnings("unused")
     public PersonDto bindAdressToPerson(@RequestParam Long personId, Long adressId) {
         return fakerService.bindAdressToPerson(personId,adressId);
     }

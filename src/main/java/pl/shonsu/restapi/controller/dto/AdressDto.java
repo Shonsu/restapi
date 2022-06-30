@@ -1,5 +1,6 @@
 package pl.shonsu.restapi.controller.dto;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class AdressDto {
@@ -9,11 +10,11 @@ public class AdressDto {
     private String houseNumber;
     private Integer flatNumber;
 
+    private Set<PersonDto> personsDto = new HashSet<>();
+
     public void setPersonsDto(Set<PersonDto> personsDto) {
         this.personsDto = personsDto;
     }
-
-    private Set<PersonDto> personsDto;
 
     public AdressDto() {
     }
@@ -21,6 +22,8 @@ public class AdressDto {
     public AdressDto(String city, String street, String houseNumber, Integer flatNumber) {
         this.city = city;
         this.street = street;
+        this.houseNumber = houseNumber;
+        this.flatNumber = flatNumber;
     }
 
     public long getId() {

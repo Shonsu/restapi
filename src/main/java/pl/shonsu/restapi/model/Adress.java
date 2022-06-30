@@ -1,6 +1,7 @@
 package pl.shonsu.restapi.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,13 +13,17 @@ public class Adress {
     private String street;
     private String houseNumber;
     private Integer flatNumber;
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Set<Person> persons;
+    @ManyToMany(mappedBy = "adresses", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private Set<Person> persons = new HashSet<>();
 
     public Adress() {
     }
 
-    public Adress(String city, String streetName, String houseNumber, Integer flatNumber) {
+    public Adress(String city, String street, String houseNumber, Integer flatNumber) {
+        this.city = city;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.flatNumber = flatNumber;
     }
 
     public void setId(long id) {
@@ -57,6 +62,18 @@ public class Adress {
 
     public Set<Person> getPersons() {
         return persons;
+    }
+
+    @Override
+    public String toString() {
+        return "Adress{" +
+                "id=" + id +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", flatNumber=" + flatNumber +
+                ", persons=" + persons +
+                '}';
     }
 
     public static final class AdressBuilder {

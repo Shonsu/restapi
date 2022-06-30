@@ -26,14 +26,21 @@ public class AdressControler {
     }
 
     @GetMapping("/adresses/{id}")
-    public Adress getSingleAdress(@PathVariable long id) {
-        return adressService.getSingleAdress(id);
+    public AdressDto getSingleAdress(@PathVariable long id) {
+        Adress adress = adressService.getAdressById(id);
+        return AdressDto.AdressDtoBuilder.anAdressDto()
+                .withId(adress.getId())
+                .withCity(adress.getCity())
+                .withStreet(adress.getStreet())
+                .withHouseNumber(adress.getHouseNumber())
+                .withFlatNumber(adress.getFlatNumber())
+                .build();
     }
 
     @PostMapping("/adresses")
-    public void createAdress(@RequestBody AdressDto adressDto) {
+    public Adress createAdress(@RequestBody AdressDto adressDto) {
         Adress adress = mapToAdress(EMPTY_ID, adressDto);
-        adressService.addAdress(adress);
+        return adressService.addAdress(adress);
     }
 
     @PostMapping("/adresses/{id}")

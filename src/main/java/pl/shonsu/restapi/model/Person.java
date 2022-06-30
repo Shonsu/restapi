@@ -2,6 +2,7 @@ package pl.shonsu.restapi.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,8 +19,16 @@ public class Person {
             name = "adress_person",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "adress_id"))
-    private Set<Adress> adresses;
+    private Set<Adress> adresses = new HashSet<>();
 
+    public Person() {
+    }
+
+    public Person(String firstName, String lastName, LocalDate birthDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+    }
 
     public void addAdress(Adress adress) {
         this.adresses.add(adress);
@@ -53,6 +62,17 @@ public class Person {
 
     public void setAdresses(Set<Adress> adresses) {
         this.adresses = adresses;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", adresses=" + adresses +
+                '}';
     }
 
     public static final class PersonBuilder {
@@ -93,7 +113,6 @@ public class Person {
             this.adresses = adresses;
             return this;
         }
-
         public Person build() {
             Person person = new Person();
             person.birthDate = this.birthDate;
