@@ -8,7 +8,7 @@ import java.util.Set;
 public class Adress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String city;
     private String street;
     private String houseNumber;
@@ -40,7 +40,7 @@ public class Adress {
         person.getAdresses().remove(this);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -77,7 +77,7 @@ public class Adress {
     }
 
     public static final class AdressBuilder {
-        private long id;
+        private Long id;
         private String city;
         private String street;
         private String houseNumber;
@@ -91,7 +91,7 @@ public class Adress {
             return new AdressBuilder();
         }
 
-        public AdressBuilder withId(long id) {
+        public AdressBuilder withId(Long id) {
             this.id = id;
             return this;
         }

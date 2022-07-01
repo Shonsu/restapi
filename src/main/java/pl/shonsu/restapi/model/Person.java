@@ -9,7 +9,7 @@ import java.util.Set;
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -40,7 +40,7 @@ public class Person {
         adress.getPersons().remove(this);
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -76,7 +76,7 @@ public class Person {
     }
 
     public static final class PersonBuilder {
-        private long id;
+        private Long id;
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
@@ -89,7 +89,7 @@ public class Person {
             return new PersonBuilder();
         }
 
-        public PersonBuilder withId(long id) {
+        public PersonBuilder withId(Long id) {
             this.id = id;
             return this;
         }

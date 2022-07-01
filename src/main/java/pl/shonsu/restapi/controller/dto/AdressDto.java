@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AdressDto {
-    private long id;
+    private Long id;
     private String city;
     private String street;
     private String houseNumber;
@@ -51,7 +51,7 @@ public class AdressDto {
     }
 
     public static final class AdressDtoBuilder {
-        private long id;
+        private Long id;
         private String city;
         private String street;
         private String houseNumber;

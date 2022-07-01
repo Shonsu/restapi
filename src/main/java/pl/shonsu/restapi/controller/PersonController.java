@@ -4,12 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import pl.shonsu.restapi.controller.dto.PersonDto;
-import pl.shonsu.restapi.model.Person;
+import pl.shonsu.restapi.controller.dto.PersonRequestDto;
 import pl.shonsu.restapi.service.PersonService;
 
-import java.util.List;
-
-import static pl.shonsu.restapi.controller.mapper.PersonMapper.mapToPerson;
+import java.util.Set;
 
 @RequestMapping("/api/doc")
 @RestController
@@ -23,46 +21,46 @@ public class PersonController {
     }
 
     @GetMapping("/persons")
-    public Page<Person> getPersons(@RequestParam(required = false) Integer page, Sort.Direction sort) {
+    public Page<PersonDto> getPersons(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
-        Page<Person> persons = personService.getPersons(pageNumber, sortDirection);
-        persons.map(PersonDto::new);
-        return persons;
+        return personService.getPersons(pageNumber, sortDirection);
     }
 
-//    @GetMapping("/persons2")
-//    public List<PersonDto> getPersons2(@RequestParam(required = false) Integer page, Sort.Direction sort) {
-//        int pageNumber = page != null && page > 0 ? page : 0;
-//        Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
-//        return personService.getPersons2(pageNumber, sortDirection);
-//    }
     @GetMapping("/persons/adresses")
-    public List<PersonDto> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
+    public Page<PersonDto> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
         return personService.getPersonsWithAdresses(pageNumber, sortDirection);
     }
 
-    @GetMapping("/persons/{id}")
-    public Person getPersonById(@PathVariable long id) {
+    @GetMapping("/person/{id}")
+    public PersonDto getPersonById(@PathVariable long id) {
         return personService.getPersonById(id);
     }
 
+    @GetMapping("/person/{id}/adresses")
+    public PersonDto getPersonWithAdressesById(@PathVariable long id) {
+        return personService.getPersonByIdWithAdresses(id);
+    }
+
     @PostMapping("/person")
-    public Person createPerson(@RequestBody PersonDto personDto) {
-        Person person = mapToPerson(EMPTY_ID, personDto);
-        return personService.addPerson(person);
+    public PersonDto createPerson(@RequestBody PersonRequestDto personRequestDto) {
+        return personService.addPerson(personRequestDto);
     }
 
     @PutMapping("/person/{id}")
-    public Person updatePerson(@PathVariable Long id, @RequestBody PersonDto personDto) {
-        Person person = mapToPerson(id, personDto);
-        return personService.addPerson(person);
+    public PersonDto updatePerson(@PathVariable Long id, @RequestBody PersonRequestDto personRequestDto) {
+        return personService.updatePerson(id, personRequestDto);
     }
 
     @GetMapping("/firstPersonWithNullAdress")
-    public Person getPersonWithAdressNull() {
+    public PersonDto getPersonWithAdressNull() {
         return personService.getPersonWithAdressNull();
+    }
+
+    @GetMapping("/personsWithoutAdresses")
+    public Set<PersonDto> getPersonsWithoutAdresses() {
+        return personService.getPersonsWithoutAdresses();
     }
 }

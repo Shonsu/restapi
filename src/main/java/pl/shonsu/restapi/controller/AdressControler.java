@@ -3,12 +3,10 @@ package pl.shonsu.restapi.controller;
 
 import org.springframework.web.bind.annotation.*;
 import pl.shonsu.restapi.controller.dto.AdressDto;
-import pl.shonsu.restapi.model.Adress;
+import pl.shonsu.restapi.controller.dto.AdressRequestDto;
 import pl.shonsu.restapi.service.AdressService;
 
 import java.util.Set;
-
-import static pl.shonsu.restapi.controller.mapper.AdressMapper.mapToAdress;
 
 @RestController
 public class AdressControler {
@@ -27,26 +25,22 @@ public class AdressControler {
 
     @GetMapping("/adresses/{id}")
     public AdressDto getSingleAdress(@PathVariable long id) {
-        Adress adress = adressService.getAdressById(id);
-        return AdressDto.AdressDtoBuilder.anAdressDto()
-                .withId(adress.getId())
-                .withCity(adress.getCity())
-                .withStreet(adress.getStreet())
-                .withHouseNumber(adress.getHouseNumber())
-                .withFlatNumber(adress.getFlatNumber())
-                .build();
+        return adressService.getAdressById(id);
     }
 
     @PostMapping("/adresses")
-    public Adress createAdress(@RequestBody AdressDto adressDto) {
-        Adress adress = mapToAdress(EMPTY_ID, adressDto);
-        return adressService.addAdress(adress);
+    public AdressDto createAdress(@RequestBody AdressRequestDto adressRequestDto) {
+        return adressService.addAdress(adressRequestDto);
     }
 
-    @PostMapping("/adresses/{id}")
-    public void updateAdress(@RequestParam Long id, @RequestBody AdressDto adressDto) {
-        Adress adress = mapToAdress(id, adressDto);
-        adressService.updateAdress(adress);
+    @PutMapping("/adresses/{id}")
+    public AdressDto updateAdress(@RequestParam Long id, @RequestBody AdressRequestDto adressRequestDto) {
+        return adressService.updateAdress(id, adressRequestDto);
+    }
+
+    @GetMapping("/adress/{id}/persons")
+    public AdressDto getAdressWithPersonsById(@PathVariable Long id){
+        return adressService.getPersonById(id);
     }
 
 }

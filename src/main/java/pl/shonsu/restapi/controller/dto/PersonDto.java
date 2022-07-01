@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PersonDto {
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
     private LocalDate birthDate;
@@ -21,11 +21,11 @@ public class PersonDto {
         this.birthDate = birthDate;
     }
 
+
     public PersonDto(Person person) {
     }
 
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -55,7 +55,7 @@ public class PersonDto {
     }
     public static final class PersonDtoBuilder {
 
-        private long id;
+        private Long id;
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
@@ -68,7 +68,7 @@ public class PersonDto {
             return new PersonDtoBuilder();
         }
 
-        public PersonDtoBuilder withId(long id) {
+        public PersonDtoBuilder withId(Long id) {
             this.id = id;
             return this;
         }

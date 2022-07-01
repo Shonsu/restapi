@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.PersonDto;
+import pl.shonsu.restapi.controller.dto.PersonRequestDto;
 import pl.shonsu.restapi.controller.mapper.PersonDtoMapper;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
@@ -17,10 +18,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static pl.shonsu.restapi.controller.mapper.PersonDtoMapper.*;
+import static pl.shonsu.restapi.controller.mapper.PersonMapper.mapToPersonFromPersonRequestDto;
+
 @Service
 public class PersonService {
 
     private static final int PAGE_SIZE = 20;
+    private static final Long EMPTY_ID = null;
     private final PersonRepository personRepository;
     private final AdressRepository adressRepository;
 
@@ -29,24 +34,13 @@ public class PersonService {
         this.adressRepository = adressRepository;
     }
 
-    public Page<Person> getPersons(int page, Sort.Direction sort) {
+    public Page<PersonDto> getPersons(int page, Sort.Direction sort) {
         return personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
-                        Sort.by(sort, "id")));
-
+                        Sort.by(sort, "id"))).map(PersonDtoMapper::mapToPersonDto);
     }
-//    public List<PersonDto> getPersons2(int page, Sort.Direction sort) {
-//        return getAll(
-//                PageRequest.of(page, PAGE_SIZE,
-//                        Sort.by(sort, "id")));
-//
-//    }
-//    List<PersonDto> getAll(Pageable pageable){
-//        Page<Person> page = personRepository.findAll(pageable); // Page<User>
-//        return new PageImpl<PersonDto>(mapToPersonsDtoList(page.getContent()), pageable, page.getTotalElements()).toList();
-//    }
 
-    public List<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
+    public Page<PersonDto> getPersonsWithAdresses(int page, Sort.Direction sort) {
         Page<Person> allPersons = personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
                         Sort.by(sort, "id")));
@@ -54,13 +48,10 @@ public class PersonService {
                 .map(Person::getId)
                 .toList();
         Set<Adress> adresses = adressRepository.findAllAdressesByPersonsIdIn(ids);
-        allPersons.stream().forEach(person -> System.out.println(person.getId()));
         allPersons.forEach(person -> person.setAdresses(extractAdresses(adresses, person.getId()))); //todo move to adress class
-        return allPersons.stream()
-                .map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(
-                        person,
-                        person.getAdresses()))
-                .toList();
+        return allPersons.map(person -> PersonDtoMapper.mapToPersonDtoWithAdresses(
+                person,
+                person.getAdresses()));
     }
 
     private Set<Adress> extractAdresses(Set<Adress> adresses, long id) {
@@ -71,8 +62,9 @@ public class PersonService {
     }
 
     @Transactional
-    public Person addPerson(Person person) {
-        return personRepository.save(person);
+    public PersonDto addPerson(PersonRequestDto personRequestDto) {
+        Person person = mapToPersonFromPersonRequestDto(EMPTY_ID, personRequestDto);
+        return mapToPersonDto(personRepository.save(person));
     }
 
     @Transactional
@@ -81,11 +73,31 @@ public class PersonService {
         return persons;
     }
 
-    public Person getPersonWithAdressNull() {
-        return personRepository.findFirstPersonByAdressesIdIsNull();
+    public PersonDto getPersonWithAdressNull() {
+        return mapToPersonDto(personRepository.findFirstPersonByAdressesIdIsNull());
     }
 
-    public Person getPersonById(Long id) {
-        return personRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
+    public PersonDto getPersonById(Long id) {
+        Person person =  personRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
+        return mapToPersonDto(person);
+    }
+
+    public Set<PersonDto> getPersonsWithoutAdresses() {
+        return mapToPersonsDto(new HashSet<>(personRepository.findByAdressesIsNull()));
+    }
+
+    public Person getReferenceById(Long id) {
+        return personRepository.getReferenceById(id);
+    }
+
+    public PersonDto getPersonByIdWithAdresses(long id) {
+        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
+        return mapToPersonDtoWithAdresses(person, person.getAdresses());
+    }
+
+    public PersonDto updatePerson(Long id, PersonRequestDto personRequestDto) {
+        Person person = personRepository.getReferenceById(id);
+        person = personRepository.save(mapToPersonFromPersonRequestDto(person.getId(), personRequestDto));
+        return mapToPersonDto(person);
     }
 }

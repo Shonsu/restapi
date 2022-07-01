@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
+import pl.shonsu.restapi.repository.AdressRepository;
+import pl.shonsu.restapi.repository.PersonRepository;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -15,21 +17,27 @@ import static pl.shonsu.restapi.controller.mapper.PersonDtoMapper.*;
 @Service
 public class FakerService {
 
-    private static final Long EMPTY_ID = null;
+   // private static final Long EMPTY_ID = null;
     DummyService dummyService;
     PersonService personService;
     AdressService adressService;
 
-    public FakerService(DummyService dummyService, PersonService personService, AdressService adressService) {
+
+    private final PersonRepository personRepository;
+    private final AdressRepository adressRepository;
+
+    public FakerService(DummyService dummyService, PersonService personService, AdressService adressService, PersonRepository personRepository, AdressRepository adressRepository) {
         this.dummyService = dummyService;
         this.personService = personService;
         this.adressService = adressService;
+        this.personRepository = personRepository;
+        this.adressRepository = adressRepository;
     }
 
     @Transactional
     public PersonDto addDummyPerson() {
         Person person = dummyService.getDummyPerson();
-        return mapToPersonDto(personService.addPerson(person));
+        return mapToPersonDto(personRepository.save(person));
     }
 
     @Transactional
@@ -44,7 +52,7 @@ public class FakerService {
     @Transactional
     public PersonDto addDummyPersonWithAdress() {
         Person person = dummyService.getDummyPersonWithAdress();
-        person = personService.addPerson(person);
+        person = personRepository.save(person);
         return mapToPersonDtoWithAdresses(person, person.getAdresses());
 
     }
@@ -59,19 +67,19 @@ public class FakerService {
 
     @Transactional
     public PersonDto addAdressToPersonWithNullAdress() {
-        Person person = personService.getPersonWithAdressNull();
+        Person person = personRepository.findFirstPersonByAdressesIdIsNull();
         Adress adress = dummyService.getDummyAdress();
         person.addAdress(adress);
-        person = personService.addPerson(person);
+        person = personRepository.save(person);
         return mapToPersonDtoWithAdresses(person, person.getAdresses());
     }
 
     @Transactional
     public PersonDto bindAdressToPerson(Long personId, Long adressId) {
-        Person person = personService.getPersonById(personId);
-        Adress adress = adressService.getAdressById(adressId);
+        Person person = personRepository.getReferenceById(personId);
+        Adress adress = adressRepository.getReferenceById(adressId);
         person.addAdress(adress);
-        person = personService.addPerson(person);
+        person = personRepository.save(person);
         return mapToPersonDtoWithAdresses(person, person.getAdresses());
     }
 }

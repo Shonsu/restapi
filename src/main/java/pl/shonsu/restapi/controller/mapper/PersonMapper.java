@@ -1,6 +1,7 @@
 package pl.shonsu.restapi.controller.mapper;
 
 import pl.shonsu.restapi.controller.dto.PersonDto;
+import pl.shonsu.restapi.controller.dto.PersonRequestDto;
 import pl.shonsu.restapi.model.Person;
 
 import java.util.Set;
@@ -30,7 +31,14 @@ public class PersonMapper {
                 .withAdresses(mapToAdresses(personDto.getAdressesDto()))
                 .build();
     }
-
+    public static Person mapToPersonFromPersonRequestDto(Long id, PersonRequestDto personRequestDto) {
+        return Person.PersonBuilder.aPerson()
+                .withId(id)
+                .withFirstName(personRequestDto.firstName())
+                .withLastName(personRequestDto.lastName())
+                .withBirthDate(personRequestDto.birthDate())
+                .build();
+    }
     private static Person.PersonBuilder createPersonBuilder(PersonDto personDto) {
         return Person.PersonBuilder.aPerson()
                 .withFirstName(personDto.getFirstName())
