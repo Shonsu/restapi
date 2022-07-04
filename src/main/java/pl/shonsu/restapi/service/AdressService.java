@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.AdressDto;
 import pl.shonsu.restapi.controller.dto.AdressRequestDto;
+import pl.shonsu.restapi.controller.exceptionshandling.exceptions.PersonNotFoundException;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.repository.AdressRepository;
 
@@ -29,21 +30,21 @@ public class AdressService {
 
     public AdressDto getAdressById(Long id) {
         Adress adress = adressRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Can't find adress by given id " + id));
+                .orElseThrow(() -> new PersonNotFoundException("Can't find adress by given id " + id));
         return mapToAdressDto(adress);
     }
 
     @Transactional
     public AdressDto addAdress(AdressRequestDto adressRequestDto) {
-        Adress adress =  adressRepository.save(mapToAdressFromAdressRequestDto(EMPTY_ID, adressRequestDto));
+        Adress adress = adressRepository.save(mapToAdressFromAdressRequestDto(EMPTY_ID, adressRequestDto));
         return mapToAdressDto(adress);
     }
 
-
+    @Transactional
     public AdressDto updateAdress(Long id, AdressRequestDto adressRequestDto) {
         Adress adress = adressRepository.getReferenceById(id);
         adress = adressRepository.save(mapToAdressFromAdressRequestDto(adress.getId(), adressRequestDto));
-        return mapToAdressDto( adress);
+        return mapToAdressDto(adress);
     }
 
     public Adress getReferenceById(Long id) {
@@ -51,7 +52,7 @@ public class AdressService {
     }
 
     public AdressDto getPersonById(Long id) {
-        Adress adress = adressRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
+        Adress adress = adressRepository.findById(id).orElseThrow(() -> new PersonNotFoundException("Can't find person by given id " + id));
         return mapToAdressDtoWithPersons(adress, adress.getPersons());
     }
 

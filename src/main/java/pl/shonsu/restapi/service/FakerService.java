@@ -3,6 +3,7 @@ package pl.shonsu.restapi.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.PersonDto;
+import pl.shonsu.restapi.controller.exceptionshandling.exceptions.PersonNotFoundException;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
@@ -16,8 +17,6 @@ import static pl.shonsu.restapi.controller.mapper.PersonDtoMapper.*;
 
 @Service
 public class FakerService {
-
-   // private static final Long EMPTY_ID = null;
     DummyService dummyService;
     PersonService personService;
     AdressService adressService;
@@ -67,7 +66,8 @@ public class FakerService {
 
     @Transactional
     public PersonDto addAdressToPersonWithNullAdress() {
-        Person person = personRepository.findFirstPersonByAdressesIdIsNull();
+        Person person = personRepository.findFirstPersonByAdressesIdIsNull()
+                .orElseThrow(() -> new PersonNotFoundException("Can't find person without adress"));;
         Adress adress = dummyService.getDummyAdress();
         person.addAdress(adress);
         person = personRepository.save(person);

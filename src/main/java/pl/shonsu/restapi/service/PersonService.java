@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.controller.dto.PersonRequestDto;
 import pl.shonsu.restapi.controller.mapper.PersonDtoMapper;
+import pl.shonsu.restapi.controller.exceptionshandling.exceptions.PersonNotFoundException;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
@@ -35,6 +36,7 @@ public class PersonService {
     }
 
     public Page<PersonDto> getPersons(int page, Sort.Direction sort) {
+
         return personRepository.findAllPersons(
                 PageRequest.of(page, PAGE_SIZE,
                         Sort.by(sort, "id"))).map(PersonDtoMapper::mapToPersonDto);
@@ -74,30 +76,43 @@ public class PersonService {
     }
 
     public PersonDto getPersonWithAdressNull() {
-        return mapToPersonDto(personRepository.findFirstPersonByAdressesIdIsNull());
+        Person person = personRepository.findFirstPersonByAdressesIdIsNull()
+                .orElseThrow(() -> new PersonNotFoundException("Can't find person without adress"));
+        // if(person == null) throw new ResourceNotFoundException();
+        return mapToPersonDto(person);
     }
 
     public PersonDto getPersonById(Long id) {
-        Person person =  personRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
+        Person person =  personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
         return mapToPersonDto(person);
     }
 
     public Set<PersonDto> getPersonsWithoutAdresses() {
-        return mapToPersonsDto(new HashSet<>(personRepository.findByAdressesIsNull()));
+        List<Person> personList = personRepository.findByAdressesIsNull();
+        if(personList.isEmpty()) throw new PersonNotFoundException("Can't find person without adress");
+        return mapToPersonsDto(new HashSet<>(personList));
     }
 
     public Person getReferenceById(Long id) {
         return personRepository.getReferenceById(id);
     }
 
-    public PersonDto getPersonByIdWithAdresses(long id) {
-        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("Can't find person by given id " + id));
+    public PersonDto getPersonWithAdressesById(long id) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
         return mapToPersonDtoWithAdresses(person, person.getAdresses());
     }
 
+    @Transactional
     public PersonDto updatePerson(Long id, PersonRequestDto personRequestDto) {
-        Person person = personRepository.getReferenceById(id);
+        Person person = personRepository.findById(id).
+                orElseThrow(() -> new PersonNotFoundException(id));
         person = personRepository.save(mapToPersonFromPersonRequestDto(person.getId(), personRequestDto));
         return mapToPersonDto(person);
+    }
+
+    public void deletePerson(long id) {
+        personRepository.deleteById(id);
     }
 }

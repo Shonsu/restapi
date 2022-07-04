@@ -2,6 +2,7 @@ package pl.shonsu.restapi.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.controller.dto.PersonRequestDto;
@@ -13,7 +14,6 @@ import java.util.Set;
 @RestController
 public class PersonController {
 
-    private static final Long EMPTY_ID = null;
     private final PersonService personService;
 
     public PersonController(PersonService personService) {
@@ -21,6 +21,7 @@ public class PersonController {
     }
 
     @GetMapping("/persons")
+    @ResponseStatus(HttpStatus.OK)
     public Page<PersonDto> getPersons(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
@@ -28,20 +29,11 @@ public class PersonController {
     }
 
     @GetMapping("/persons/adresses")
+    @ResponseStatus(HttpStatus.OK)
     public Page<PersonDto> getPersonsWithAdresses(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
         Sort.Direction sortDirection = sort != null ? sort : Sort.Direction.ASC;
         return personService.getPersonsWithAdresses(pageNumber, sortDirection);
-    }
-
-    @GetMapping("/person/{id}")
-    public PersonDto getPersonById(@PathVariable long id) {
-        return personService.getPersonById(id);
-    }
-
-    @GetMapping("/person/{id}/adresses")
-    public PersonDto getPersonWithAdressesById(@PathVariable long id) {
-        return personService.getPersonByIdWithAdresses(id);
     }
 
     @PostMapping("/person")
@@ -49,17 +41,36 @@ public class PersonController {
         return personService.addPerson(personRequestDto);
     }
 
-    @PutMapping("/person/{id}")
+    @GetMapping("/persons/{id}")
+    //@ResponseStatus(HttpStatus.OK)
+    public PersonDto getPersonById(@PathVariable long id) {
+        return personService.getPersonById(id);
+    }
+
+    @PutMapping("/persons/{id}")
     public PersonDto updatePerson(@PathVariable Long id, @RequestBody PersonRequestDto personRequestDto) {
         return personService.updatePerson(id, personRequestDto);
     }
 
+    @DeleteMapping("/persons/{id}")
+    public void deletePerson(@PathVariable long id) {
+        personService.deletePerson(id);
+    }
+
+    @GetMapping("/person/{id}/adresses")
+    @ResponseStatus(HttpStatus.OK)
+    public PersonDto getPersonWithAdressesById(@PathVariable long id) {
+        return personService.getPersonWithAdressesById(id);
+    }
+
     @GetMapping("/firstPersonWithNullAdress")
+    @ResponseStatus(HttpStatus.OK)
     public PersonDto getPersonWithAdressNull() {
         return personService.getPersonWithAdressNull();
     }
 
     @GetMapping("/personsWithoutAdresses")
+    //@ResponseStatus(HttpStatus.OK)
     public Set<PersonDto> getPersonsWithoutAdresses() {
         return personService.getPersonsWithoutAdresses();
     }
