@@ -2,15 +2,26 @@ package pl.shonsu.restapi.controller.dto;
 
 import pl.shonsu.restapi.model.Person;
 
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PersonDto {
     private Long id;
+    @NotBlank(message = "User can not have empty First name")
+    @NotNull(message = "User must have First name")
+    @Pattern(regexp = "[a-zA-Z -]*", message = "Name can only have letters")
     private String firstName;
+
+    @NotBlank(message = "User can not have empty Last name")
+    @NotNull(message = "User must have Last name")
+    @Pattern(regexp = "[a-zA-Z -]*", message = "Name can only have letters")
     private String lastName;
+
+    @Past(message = "Date of birth should be from the past")
     private LocalDate birthDate;
+
     private Set<AdressDto> adressesDto = new HashSet<>();
 
     public PersonDto(){}

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.PersonDto;
 import pl.shonsu.restapi.controller.dto.PersonRequestDto;
+import pl.shonsu.restapi.exceptionshandling.exceptions.PersonNotFoundException;
 import pl.shonsu.restapi.controller.mapper.PersonDtoMapper;
-import pl.shonsu.restapi.controller.exceptionshandling.exceptions.PersonNotFoundException;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.model.Person;
 import pl.shonsu.restapi.repository.AdressRepository;
@@ -78,24 +78,19 @@ public class PersonService {
     public PersonDto getPersonWithAdressNull() {
         Person person = personRepository.findFirstPersonByAdressesIdIsNull()
                 .orElseThrow(() -> new PersonNotFoundException("Can't find person without adress"));
-        // if(person == null) throw new ResourceNotFoundException();
         return mapToPersonDto(person);
     }
 
     public PersonDto getPersonById(Long id) {
-        Person person =  personRepository.findById(id)
+        Person person = personRepository.findById(id)
                 .orElseThrow(() -> new PersonNotFoundException(id));
         return mapToPersonDto(person);
     }
 
     public Set<PersonDto> getPersonsWithoutAdresses() {
         List<Person> personList = personRepository.findByAdressesIsNull();
-        if(personList.isEmpty()) throw new PersonNotFoundException("Can't find person without adress");
+        if (personList.isEmpty()) throw new PersonNotFoundException("Can't find person without adress");
         return mapToPersonsDto(new HashSet<>(personList));
-    }
-
-    public Person getReferenceById(Long id) {
-        return personRepository.getReferenceById(id);
     }
 
     public PersonDto getPersonWithAdressesById(long id) {
@@ -113,6 +108,7 @@ public class PersonService {
     }
 
     public void deletePerson(long id) {
+        if (!personRepository.existsById(id)) throw new PersonNotFoundException(id);
         personRepository.deleteById(id);
     }
 }

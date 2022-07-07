@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.shonsu.restapi.controller.dto.AdressDto;
 import pl.shonsu.restapi.controller.dto.AdressRequestDto;
-import pl.shonsu.restapi.controller.exceptionshandling.exceptions.PersonNotFoundException;
+import pl.shonsu.restapi.exceptionshandling.exceptions.AdressNotFoundException;
 import pl.shonsu.restapi.model.Adress;
 import pl.shonsu.restapi.repository.AdressRepository;
 
@@ -30,7 +30,7 @@ public class AdressService {
 
     public AdressDto getAdressById(Long id) {
         Adress adress = adressRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException("Can't find adress by given id " + id));
+                .orElseThrow(() -> new AdressNotFoundException(id));
         return mapToAdressDto(adress);
     }
 
@@ -42,19 +42,21 @@ public class AdressService {
 
     @Transactional
     public AdressDto updateAdress(Long id, AdressRequestDto adressRequestDto) {
-        Adress adress = adressRepository.getReferenceById(id);
+        Adress adress = adressRepository.findById(id)
+                .orElseThrow(() -> new AdressNotFoundException(id));
         adress = adressRepository.save(mapToAdressFromAdressRequestDto(adress.getId(), adressRequestDto));
         return mapToAdressDto(adress);
     }
 
-    public Adress getReferenceById(Long id) {
-        return adressRepository.getReferenceById(id);
-    }
-
-    public AdressDto getPersonById(Long id) {
-        Adress adress = adressRepository.findById(id).orElseThrow(() -> new PersonNotFoundException("Can't find person by given id " + id));
+    public AdressDto getAdressWithPersonById(Long id) {
+        Adress adress = adressRepository.findById(id)
+                .orElseThrow(() -> new AdressNotFoundException(id));
         return mapToAdressDtoWithPersons(adress, adress.getPersons());
     }
 
 
+    public void deleteAdress(Long id) {
+        if (!adressRepository.existsById(id)) throw new AdressNotFoundException((id));
+        adressRepository.deleteById(id);
+    }
 }

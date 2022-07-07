@@ -1,4 +1,4 @@
-package pl.shonsu.restapi.controller.exceptionshandling.exceptions;
+package pl.shonsu.restapi.exceptionshandling.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

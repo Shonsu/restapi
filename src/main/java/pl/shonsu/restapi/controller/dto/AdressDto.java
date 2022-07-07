@@ -1,13 +1,22 @@
 package pl.shonsu.restapi.controller.dto;
 
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Set;
 
 public class AdressDto {
     private Long id;
+    @NotBlank(message = "City can not be empty")
+    @NotNull(message = "Adress must have City")
+    @Pattern(regexp = "[a-zA-Z -]*", message = "City can only have letters")
     private String city;
+    @NotBlank(message = "Street can not be empty")
+    @NotNull(message = "Adress must have street")
+    @Pattern(regexp = "[a-zA-Z -.]*", message = "Street can only have letters")
     private String street;
+    @NotNull(message = "Adress must have house number")
     private String houseNumber;
+    @Positive(message = "Number must be positive")
     private Integer flatNumber;
 
     private Set<PersonDto> personsDto = new HashSet<>();
