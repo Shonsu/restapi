@@ -14,7 +14,8 @@ import javax.validation.constraints.Positive;
 import java.util.Set;
 
 @Validated
-@RequestMapping("/api/doc")
+//@RequestMapping("/api/doc")
+//@RequestMapping("/persons")
 @RestController
 public class PersonController {
 
@@ -24,7 +25,7 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @GetMapping("/persons")
+    @GetMapping(value = "/persons")
     @ResponseStatus(HttpStatus.OK)
     public Page<PersonDto> getPersons(@RequestParam(required = false) Integer page, Sort.Direction sort) {
         int pageNumber = page != null && page > 0 ? page : 0;
@@ -75,5 +76,10 @@ public class PersonController {
     @GetMapping("/personsWithoutAdresses")
     public Set<PersonDto> getPersonsWithoutAdresses() {
         return personService.getPersonsWithoutAdresses();
+    }
+
+    @GetMapping("/test")
+    public String[] getArticles() {
+        return new String[]{"Article 1", "Article 2", "Article 3"};
     }
 }

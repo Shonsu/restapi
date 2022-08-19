@@ -1,12 +1,17 @@
 package pl.shonsu.authserver.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import pl.shonsu.authserver.user.service.UserService;
@@ -17,16 +22,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class DefaultSecurityConfig {
 
-    @Autowired
-    DataSource dataSource;
+
     @Autowired
     UserService userService;
 
     // @formatter:off
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        //userService.saveDefaultUser();
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests.anyRequest().authenticated()
@@ -41,12 +47,15 @@ public class DefaultSecurityConfig {
         auth
                 .userDetailsService(userService)
                 .passwordEncoder(passwordEncoder());
-//        auth
-//                .inMemoryAuthentication()
-//                .withUser("Shonsu")
-//                .password(passwordEncoder().encode("Test123$")).roles("ADMIN");
-       // System.out.println(passwordEncoder().encode("Test123$"));
     }
+
+//    @Bean
+//    public DaoAuthenticationProvider authenticationProvider() {
+//        final DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(userService);
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//        return authProvider;
+//    }
 //    @Bean
 //    UserDetailsService users() {
 //        UserDetails user = User.withDefaultPasswordEncoder()
@@ -59,8 +68,10 @@ public class DefaultSecurityConfig {
     // @formatter:on
 
 
+    //public BCryptPasswordEncoder passwordEncoder() {
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        // return new BCryptPasswordEncoder();
     }
 }

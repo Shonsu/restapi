@@ -27,11 +27,19 @@ spring:
             client-secret: secret
             authorization-grant-type: authorization_code
             redirect-uri: "http://127.0.0.1:8080/authorized"
-            scope: persons.read
+            scope: persons.read, persons.write
             client-name: persons-client-authorization-code
+          persons-client-client-credentials:
+            provider: spring
+            client-id: persons-client
+            client-secret: secret
+            authorization-grant-type: client_credentials
+            scope: persons.read, persons.write
+            client-name: persons-client-client-credentials
         provider:
           spring:
             issuer-uri: http://auth-server:9000
-
+#persons:
+#  base-uri: http://127.0.0.1:8090/persons
 #  main:
 #    allow-bean-definition-overriding: true
